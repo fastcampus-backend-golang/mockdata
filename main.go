@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -29,10 +31,26 @@ func main() {
 	// validate input file exists
 
 	// validate output path exists
+	// if the output path only dir, use same name as input file
+	// if output path is a file, use it as output file
+	// if the file exist, confirm overwrite
 }
 
 func printUsage() {
 	fmt.Println(`Usage: fakegen [-i | --input] <input file> [-o | --output] <output path>`)
 	fmt.Println(`-i, --input: Input JSON file`)
 	fmt.Println(`-o, --output: Output JSON file`)
+}
+
+func confirmOverwrite() {
+	fmt.Println("Are you sure you want to overwrite the file? (y/n)")
+
+	reader := bufio.NewReader(os.Stdin)
+	response, _ := reader.ReadString('\n')
+	response = strings.ToLower(strings.TrimSpace(response))
+
+	if response != "y" && response != "yes" {
+		fmt.Println("Aborting...")
+		os.Exit(0)
+	}
 }
