@@ -37,9 +37,9 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println(`Usage: fakegen [-i | --input] <input file> [-o | --output] <output path>`)
-	fmt.Println(`-i, --input: Input JSON file`)
-	fmt.Println(`-o, --output: Output JSON file`)
+	fmt.Println("Usage: fakegen [-i | --input] <input file> [-o | --output] <output path>")
+	fmt.Println("-i, --input: Input of JSON file as a template")
+	fmt.Println("-o, --output: Output JSON file for the generated data")
 }
 
 func confirmOverwrite() {
