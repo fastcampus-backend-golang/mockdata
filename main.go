@@ -40,7 +40,10 @@ func main() {
 	}
 
 	// validate output path exists
-	validateOutput(outputPath)
+	if err := validateOutput(outputPath); err != nil {
+		fmt.Printf("invalid output: %s\n", err.Error())
+		os.Exit(0)
+	}
 
 	// process the input
 	var mapping map[string]string
