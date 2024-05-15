@@ -9,6 +9,8 @@ import (
 	"io"
 	"os"
 	"strings"
+
+	"github.com/madeindra/fakegen/data"
 )
 
 func main() {
@@ -93,16 +95,8 @@ func validateOutput(path string) error {
 }
 
 func validateType(mapping map[string]string) error {
-	// supported types, will change with from the randomizer
-	supportedTypes := map[string]bool{
-		"name":    true,
-		"date":    true,
-		"address": true,
-		"phone":   true,
-	}
-
 	for _, value := range mapping {
-		if !supportedTypes[value] {
+		if !data.SupportedTypes[value] {
 			return fmt.Errorf("%s type is not supported", value)
 		}
 	}
