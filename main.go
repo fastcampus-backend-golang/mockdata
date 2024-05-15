@@ -47,6 +47,12 @@ func main() {
 		os.Exit(0)
 	}
 
+	// validate the mapping includes only supported types
+	if err := validateType(mapping); err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
 	// generate the output
 	result, err := generateOutput(mapping)
 	if err != nil {
@@ -82,6 +88,24 @@ func validateOutput(path string) error {
 
 	fmt.Println("Output file already exists")
 	confirmOverwrite()
+
+	return nil
+}
+
+func validateType(mapping map[string]string) error {
+	// supported types, will change with from the randomizer
+	supportedTypes := map[string]bool{
+		"name":    true,
+		"date":    true,
+		"address": true,
+		"phone":   true,
+	}
+
+	for _, value := range mapping {
+		if !supportedTypes[value] {
+			return fmt.Errorf("Unsupported type: %s", value)
+		}
+	}
 
 	return nil
 }
