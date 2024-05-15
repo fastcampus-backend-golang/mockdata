@@ -33,7 +33,7 @@ func main() {
 
 	// validate input file exists
 	if err := validateInput(inputFile); err != nil {
-		fmt.Println("Input file does not exist")
+		fmt.Printf("invalid input: %s\n", err.Error())
 		os.Exit(0)
 	}
 
@@ -43,26 +43,26 @@ func main() {
 	// process the input
 	var mapping map[string]string
 	if err := readInput(inputFile, &mapping); err != nil {
-		fmt.Println("Error reading input")
+		fmt.Printf("failed reading input: %s\n", err.Error())
 		os.Exit(0)
 	}
 
 	// validate the mapping includes only supported types
 	if err := validateType(mapping); err != nil {
-		fmt.Println(err)
+		fmt.Printf("invalid type: %s\n", err.Error())
 		os.Exit(0)
 	}
 
 	// generate the output
 	result, err := generateOutput(mapping)
 	if err != nil {
-		fmt.Println("Error generating output")
+		fmt.Printf("failed generating output: %s\n", err.Error())
 		os.Exit(0)
 	}
 
 	// write the output
 	if err := writeOutput(outputPath, result); err != nil {
-		fmt.Println("Error writing output")
+		fmt.Printf("failed writing output: %s\n", err.Error())
 		os.Exit(0)
 	}
 }
@@ -103,7 +103,7 @@ func validateType(mapping map[string]string) error {
 
 	for _, value := range mapping {
 		if !supportedTypes[value] {
-			return fmt.Errorf("Unsupported type: %s", value)
+			return fmt.Errorf("%s type is not supported", value)
 		}
 	}
 
