@@ -41,7 +41,7 @@ func generateAddress() string {
 	streetLen := len(Address["street"])
 	cityLen := len(Address["city"])
 
-	return fmt.Sprintf("%s No. %d, %s", Address["street"][rand.Intn(streetLen)], rand.Intn(100), Address["city"][rand.Intn(cityLen)])
+	return fmt.Sprintf("Jl. %s No. %d, %s", Address["street"][rand.Intn(streetLen)], rand.Intn(100), Address["city"][rand.Intn(cityLen)])
 }
 
 // generatePhone generates a random phone number with 12 digits limit
