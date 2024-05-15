@@ -2,8 +2,11 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
@@ -36,6 +39,26 @@ func main() {
 
 	// validate output path exists
 	validateOutput(outputPath)
+
+	// process the input
+	var mapping map[string]string
+	if err := readInput(inputFile, &mapping); err != nil {
+		fmt.Println("Error reading input")
+		os.Exit(0)
+	}
+
+	// generate the output
+	result, err := generateOutput(mapping)
+	if err != nil {
+		fmt.Println("Error generating output")
+		os.Exit(0)
+	}
+
+	// write the output
+	if err := writeOutput(outputPath, result); err != nil {
+		fmt.Println("Error writing output")
+		os.Exit(0)
+	}
 }
 
 func printUsage() {
@@ -74,4 +97,76 @@ func confirmOverwrite() {
 		fmt.Println("Aborting...")
 		os.Exit(0)
 	}
+}
+
+func readInput(path string, mapping *map[string]string) error {
+	if path == "" {
+		return errors.New("path is empty")
+	}
+
+	if mapping == nil {
+		return errors.New("mapping is nil")
+	}
+
+	// read file
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// parse file
+	fileBytes, err := io.ReadAll(file)
+	if err != nil {
+		return err
+	}
+
+	if len(fileBytes) == 0 {
+		return errors.New("file is empty")
+	}
+
+	// unmarshal JSON
+	if err := json.Unmarshal(fileBytes, &mapping); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func generateOutput(mapping map[string]string) (map[string]any, error) {
+	result := make(map[string]any)
+
+	for key, value := range mapping {
+		result[key] = value // will be randomized here
+	}
+
+	return result, nil
+}
+
+func writeOutput(path string, result map[string]any) error {
+	if path == "" {
+		return errors.New("path is empty")
+	}
+
+	// open file for write
+	flags := os.O_RDWR | os.O_CREATE | os.O_TRUNC
+	file, err := os.OpenFile(path, flags, 0o644)
+	if err != nil {
+		return errors.New("error opening file")
+	}
+	defer file.Close()
+
+	// json marshal
+	resultBytes, err := json.MarshalIndent(result, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	// write to file
+	_, err = file.Write(resultBytes)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
