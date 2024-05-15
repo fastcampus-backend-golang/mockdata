@@ -154,8 +154,8 @@ func readInput(path string, mapping *map[string]string) error {
 func generateOutput(mapping map[string]string) (map[string]any, error) {
 	result := make(map[string]any)
 
-	for key, value := range mapping {
-		result[key] = value // will be randomized here
+	for key, dataType := range mapping {
+		result[key] = data.Generate(dataType)
 	}
 
 	return result, nil

@@ -7,6 +7,11 @@ const (
 	TYPE_PHONE   = "phone"
 )
 
+const (
+	SUBTYPE_ADDRESS_STREET = "street"
+	SUBTYPE_ADDRESS_CITY   = "city"
+)
+
 var SupportedTypes = map[string]bool{
 	TYPE_NAME:    true,
 	TYPE_DATE:    true,
