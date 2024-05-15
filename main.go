@@ -29,11 +29,13 @@ func main() {
 	}
 
 	// validate input file exists
+	if err := validateInput(inputFile); err != nil {
+		fmt.Println("Input file does not exist")
+		os.Exit(0)
+	}
 
 	// validate output path exists
-	// if the output path only dir, use same name as input file
-	// if output path is a file, use it as output file
-	// if the file exist, confirm overwrite
+	validateOutput(outputPath)
 }
 
 func printUsage() {
@@ -42,8 +44,27 @@ func printUsage() {
 	fmt.Println("-o, --output: Output JSON file for the generated data")
 }
 
+func validateInput(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return err
+	}
+
+	return nil
+}
+
+func validateOutput(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return nil
+	}
+
+	fmt.Println("Output file already exists")
+	confirmOverwrite()
+
+	return nil
+}
+
 func confirmOverwrite() {
-	fmt.Println("Are you sure you want to overwrite the file? (y/n)")
+	fmt.Print("Are you sure you want to overwrite the file? (y/n) ")
 
 	reader := bufio.NewReader(os.Stdin)
 	response, _ := reader.ReadString('\n')
