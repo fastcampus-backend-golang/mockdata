@@ -3,6 +3,7 @@ package data
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 )
 
 func Generate(dataType string) string {
@@ -46,5 +47,15 @@ func generateAddress() string {
 
 // generatePhone generates a random phone number with 12 digits limit
 func generatePhone() string {
-	return fmt.Sprintf("08%d", rand.Intn(10000000000))
+	prefixLen := 6 + rand.Intn(4) // 6-9 digits
+
+	// prepare suffix
+	var sb strings.Builder
+	sb.WriteString("081")
+
+	for i := 0; i < prefixLen; i++ {
+		sb.WriteString(fmt.Sprintf("%d", rand.Intn(10)))
+	}
+
+	return sb.String()
 }
