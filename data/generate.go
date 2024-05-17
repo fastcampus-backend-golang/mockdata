@@ -21,28 +21,28 @@ func Generate(dataType string) string {
 	return ""
 }
 
-// generateName generates a random name from data
+// generateName membuat nama dari kumpulan kata yang sudah ada
 func generateName() string {
-	nameLen := len(Name)
+	nameLen := len(name)
 
-	return Name[rand.Intn(nameLen)]
+	return name[rand.Intn(nameLen)]
 }
 
-// generateDate generates a random date with format YYYY-MM-DD
+// generateDate membuat tanggal acak
 func generateDate() string {
 	year := rand.Intn(100) + 1950
 	month := rand.Intn(12) + 1
 	day := rand.Intn(28) + 1
 
-	return fmt.Sprintf("%d-%02d-%02d", year, month, day)
+	return fmt.Sprintf("%02d-%02d-%d", day, month, year)
 }
 
-// generateAddress generates a random address from combination of street, random number, and city
+// generateAddress membuat alamat acak dari kumpulan kata yang sudah ada dan nomor acak
 func generateAddress() string {
-	streetLen := len(Address["street"])
-	cityLen := len(Address["city"])
+	streetLen := len(address[SUBTYPE_ADDRESS_STREET])
+	cityLen := len(address[SUBTYPE_ADDRESS_CITY])
 
-	return fmt.Sprintf("Jl. %s No. %d, %s", Address["street"][rand.Intn(streetLen)], rand.Intn(100), Address["city"][rand.Intn(cityLen)])
+	return fmt.Sprintf("Jl. %s No. %d, %s", address[SUBTYPE_ADDRESS_STREET][rand.Intn(streetLen)], rand.Intn(100), address[SUBTYPE_ADDRESS_CITY][rand.Intn(cityLen)])
 }
 
 // generatePhone generates a random phone number with 12 digits limit

@@ -10,11 +10,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/madeindra/fakegen/data"
+	"github.com/fastcampus-backend-golang/mockdata/data"
 )
 
 func main() {
-	// parse input and output flags
+	// baca flag help, input, dan output
 	var help bool
 	var inputFile, outputPath string
 
@@ -33,39 +33,39 @@ func main() {
 		os.Exit(0)
 	}
 
-	// validate input file exists
+	// validasi input ada
 	if err := validateInput(inputFile); err != nil {
 		fmt.Printf("invalid input: %s\n", err.Error())
 		os.Exit(0)
 	}
 
-	// validate output path exists
+	// validasi output ada
 	if err := validateOutput(outputPath); err != nil {
 		fmt.Printf("invalid output: %s\n", err.Error())
 		os.Exit(0)
 	}
 
-	// process the input
+	// proses input
 	var mapping map[string]string
 	if err := readInput(inputFile, &mapping); err != nil {
 		fmt.Printf("failed reading input: %s\n", err.Error())
 		os.Exit(0)
 	}
 
-	// validate the mapping includes only supported types
+	// validasi tipedata memuat hanya tipedata yang didukung
 	if err := validateType(mapping); err != nil {
 		fmt.Printf("invalid type: %s\n", err.Error())
 		os.Exit(0)
 	}
 
-	// generate the output
+	// membuat data palsu
 	result, err := generateOutput(mapping)
 	if err != nil {
 		fmt.Printf("failed generating output: %s\n", err.Error())
 		os.Exit(0)
 	}
 
-	// write the output
+	// menulis hasil ke file
 	if err := writeOutput(outputPath, result); err != nil {
 		fmt.Printf("failed writing output: %s\n", err.Error())
 		os.Exit(0)
@@ -99,7 +99,7 @@ func validateOutput(path string) error {
 
 func validateType(mapping map[string]string) error {
 	for _, value := range mapping {
-		if !data.SupportedTypes[value] {
+		if !data.Supported[value] {
 			return fmt.Errorf("%s type is not supported", value)
 		}
 	}
@@ -136,7 +136,6 @@ func readInput(path string, mapping *map[string]string) error {
 	}
 	defer file.Close()
 
-	// parse file
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		return err
@@ -146,7 +145,6 @@ func readInput(path string, mapping *map[string]string) error {
 		return errors.New("file is empty")
 	}
 
-	// unmarshal JSON
 	if err := json.Unmarshal(fileBytes, &mapping); err != nil {
 		return err
 	}
@@ -169,21 +167,21 @@ func writeOutput(path string, result map[string]any) error {
 		return errors.New("path is empty")
 	}
 
-	// open file for write
-	flags := os.O_RDWR | os.O_CREATE | os.O_TRUNC
-	file, err := os.OpenFile(path, flags, 0o644)
+	// flag untuk membaca, menulis, membuat file baru, dan menghapus isi file jika sudah ada
+	flags := os.O_RDWR | os.O_CREATE | os.O_TRUNC // READ WRITE | CREATE | TRUNCATE
+	file, err := os.OpenFile(path, flags, 0o644)  // 0644 = rw-r--r-- = owner read write, group read, other read
 	if err != nil {
 		return errors.New("error opening file")
 	}
 	defer file.Close()
 
-	// json marshal
+	// marshal result dengan indentasi
 	resultBytes, err := json.MarshalIndent(result, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	// write to file
+	// tulis ke file
 	_, err = file.Write(resultBytes)
 	if err != nil {
 		return err

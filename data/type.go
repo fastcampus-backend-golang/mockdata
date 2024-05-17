@@ -12,7 +12,7 @@ const (
 	SUBTYPE_ADDRESS_CITY   = "city"
 )
 
-var SupportedTypes = map[string]bool{
+var Supported = map[string]bool{
 	TYPE_NAME:    true,
 	TYPE_DATE:    true,
 	TYPE_ADDRESS: true,

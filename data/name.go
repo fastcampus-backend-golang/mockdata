@@ -1,6 +1,6 @@
 package data
 
-var Name = []string{
+var name = []string{
 	"Ani",
 	"Budi",
 	"Citra",
